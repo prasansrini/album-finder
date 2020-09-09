@@ -23,14 +23,16 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         AlbumListViewModel viewModel = ViewModelProviders.of(this).get(AlbumListViewModel.class);
         MutableLiveData<List<AlbumData>> dataListener = new MutableLiveData<>();
-        dataListener.observe(this, strings -> {
-//                binding.albumRecycler.setAdapter();
+        dataListener.observe(this, albums -> {
+            AlbumAdapter adapter = new AlbumAdapter(albums);
+            binding.albumRecycler.setAdapter(adapter);
         });
+
+        initViews(binding);
 
         viewModel.populateData(dataListener);
 
         binding.setViewModel(viewModel);
-        initViews(binding);
     }
 
     private void initViews(ActivityMainBinding binding) {
