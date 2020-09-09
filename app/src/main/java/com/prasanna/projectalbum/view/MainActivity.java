@@ -4,13 +4,13 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.prasanna.projectalbum.R;
 import com.prasanna.projectalbum.databinding.ActivityMainBinding;
+import com.prasanna.projectalbum.model.AlbumData;
 import com.prasanna.projectalbum.viewmodel.AlbumListViewModel;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         AlbumListViewModel viewModel = ViewModelProviders.of(this).get(AlbumListViewModel.class);
-        LiveData<List<String>> dataListener = new MutableLiveData<>();
+        MutableLiveData<List<AlbumData>> dataListener = new MutableLiveData<>();
         dataListener.observe(this, strings -> {
 //                binding.albumRecycler.setAdapter();
         });
