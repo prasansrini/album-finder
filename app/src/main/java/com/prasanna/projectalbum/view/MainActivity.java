@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 //                binding.albumRecycler.setAdapter();
         });
 
+
         viewModel.populateData(dataListener);
 
         binding.setViewModel(viewModel);
