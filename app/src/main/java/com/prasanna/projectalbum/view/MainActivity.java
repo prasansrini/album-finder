@@ -17,12 +17,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static List<AlbumData> mAlbums = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         AlbumListViewModel viewModel = ViewModelProviders.of(this).get(AlbumListViewModel.class);
         MutableLiveData<List<AlbumData>> dataListener = new MutableLiveData<>();
+        binding.setLifecycleOwner(this);
         dataListener.observe(this, albums -> {
             AlbumAdapter adapter = new AlbumAdapter(albums);
             binding.albumRecycler.setAdapter(adapter);
@@ -30,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
         initViews(binding);
 
-        viewModel.populateData(dataListener);
+        viewModel.setBuilderData(dataListener, this);
+
+        viewModel.populateData();
 
         binding.setViewModel(viewModel);
     }
@@ -41,9 +46,4 @@ public class MainActivity extends AppCompatActivity {
         binding.albumRecycler.setLayoutManager(gridLayoutManager);
     }
 
-    public interface AlbumDataListener {
-        void onDataReceived();
-
-        void onFailure();
-    }
 }

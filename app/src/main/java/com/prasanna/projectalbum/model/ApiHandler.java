@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.JsonArray;
+import com.prasanna.projectalbum.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,36 +32,48 @@ public class ApiHandler {
     }
 
     public void getAlbumList() {
-        ApiBuilder.getInstance().listAlbums().enqueue(new Callback<JsonArray>() {
-            @Override
-            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-                JsonArray resultArray = response.body();
-                List<AlbumData> resultData = new ArrayList<>();
-                if (resultArray != null) {
-//                    Log.e(TAG, "Response: " + resultArray.toString());
+        new FetchAlbumsWorker().start();
+    }
 
-                    for (int element = 0; element < resultArray.size(); element++) {
-                        AlbumData albumData = new AlbumData();
-                        String title = resultArray.get(element).getAsJsonObject().get("title").toString();
-                        String url = resultArray.get(element).getAsJsonObject().get("url").toString();
-                        String thumbnailUrl = resultArray.get(element).getAsJsonObject().get("thumbnailUrl").toString();
+    private static class FetchAlbumsWorker extends Thread {
+        @Override
+        public void run() {
+            fetchApi(INSTANCE.mListener);
+        }
 
-                        albumData.setTitle(title);
-                        albumData.setUrl(url);
-                        albumData.setThumbnailUrl(thumbnailUrl);
+        private void fetchApi(MutableLiveData<List<AlbumData>> listener) {
+            ApiBuilder.getInstance().listAlbums().enqueue(new Callback<JsonArray>() {
+                @Override
+                public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                    JsonArray resultArray = response.body();
+                    List<AlbumData> resultData = new ArrayList<>();
+                    if (resultArray != null) {
 
-                        resultData.add(albumData);
+                        for (int element = 0; element < resultArray.size(); element++) {
+                            AlbumData albumData = new AlbumData();
+                            String title = resultArray.get(element).getAsJsonObject().get("title").toString();
+                            String url = resultArray.get(element).getAsJsonObject().get("url").toString();
+                            String thumbnailUrl = resultArray.get(element).getAsJsonObject().get("thumbnailUrl").toString();
+
+                            albumData.setTitle(title);
+                            albumData.setUrl(url);
+                            albumData.setThumbnailUrl(thumbnailUrl);
+
+                            resultData.add(albumData);
+                        }
+                    } else {
+                        Log.e(TAG, "Response NULL");
                     }
-                } else {
-                    Log.e(TAG, "Response NULL");
-                }
-                mListener.setValue(resultData);
-            }
 
-            @Override
-            public void onFailure(Call<JsonArray> call, Throwable t) {
-                Log.e(TAG, "onError()" + t);
-            }
-        });
+                    MainActivity.mAlbums = new ArrayList<>(resultData);
+                    listener.postValue(resultData);
+                }
+
+                @Override
+                public void onFailure(Call<JsonArray> call, Throwable t) {
+                    Log.e(TAG, "onError()" + t);
+                }
+            });
+        }
     }
 }

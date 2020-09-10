@@ -41,6 +41,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         AlbumItemViewModel viewModel = new AlbumItemViewModel();
         viewModel.mTitle.setValue(mAlbumDataList.get(position).getTitle().replace("\"", ""));
         viewModel.mImageUrl.setValue(mAlbumDataList.get(position).getThumbnailUrl().replace("\"", ""));
+
         holder.bind(viewModel);
     }
 
