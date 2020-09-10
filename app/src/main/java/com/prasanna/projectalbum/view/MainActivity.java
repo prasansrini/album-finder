@@ -40,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
         binding.setViewModel(viewModel);
     }
 
+    /**
+     * Method to instantiate the Views in the Activity.
+     *
+     * @param binding Activity binding instance for Data Binding operations.
+     */
     private void initViews(ActivityMainBinding binding) {
         binding.albumRecycler.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);

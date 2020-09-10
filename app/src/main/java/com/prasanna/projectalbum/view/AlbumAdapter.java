@@ -17,11 +17,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to bind data and the view into the RecyclerView item.
+ */
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
-
-    private static final String TAG = "AlbumAdapter";
     private final List<AlbumData> mAlbumDataList;
 
+    /**
+     * Constructor for AlbumAdapter
+     */
     public AlbumAdapter(List<AlbumData> albumDataList) {
         mAlbumDataList = new ArrayList<>(albumDataList);
     }
@@ -50,14 +54,27 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         return mAlbumDataList.size();
     }
 
+    /**
+     * Class to hold the View for each item in the Adapter.
+     */
     public static class AlbumViewHolder extends RecyclerView.ViewHolder {
         AlbumItemBinding mBinding;
 
+        /**
+         * Constructor for ViewHolder of item views.
+         *
+         * @param binding Binding instance
+         */
         public AlbumViewHolder(@NonNull @NotNull AlbumItemBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
         }
 
+        /**
+         * Method to bind the AlbumItemViewModel into the Item View.
+         *
+         * @param viewModel AlbumItemViewModel instance.
+         */
         public void bind(AlbumItemViewModel viewModel) {
             mBinding.setViewModel(viewModel);
             mBinding.executePendingBindings();
